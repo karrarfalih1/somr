@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "528103639495",
+    "project_id": "somer22-52c33",
+    "storage_bucket": "somer22-52c33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528103639495:android:5529c4af87fb2bdf2331e2",
+        "android_client_info": {
+          "package_name": "com.example.somer22"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC39qoS9L1mOkLoFKQt33Xv3ZrkkYDuQv0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
