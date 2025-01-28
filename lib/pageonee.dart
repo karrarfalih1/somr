@@ -24,7 +24,6 @@ QuerySnapshot querySnapshot=await FirebaseFirestore.instance.collection('users')
 mydata.addAll(querySnapshot.docs.map((doc) => doc.data()).toList());
 QuerySnapshot querySnapshotbay=await FirebaseFirestore.instance.collection('users').where('bay',isEqualTo: true).get();
 mydataagar.addAll(querySnapshotbay.docs.map((doc)=>doc.data()).toList());
-
 QuerySnapshot querySnapshotagar=await FirebaseFirestore.instance.collection('users').where('bay',isEqualTo: false).get();
 mydatabay.addAll(querySnapshotagar.docs.map((doc)=>doc.data()).toList());
 
@@ -177,7 +176,7 @@ print(mydata);
       margin: const EdgeInsets.all(10),
       child: Row(
         children: [
-          _buildSearchBar(),
+       //   _buildSearchBar(),
          Expanded(
            child: InkWell(
             onTap: (){
@@ -270,7 +269,7 @@ print(mydata);
         scrollDirection: Axis.horizontal, 
         itemCount: 2,
         itemBuilder: (context, index) {
-          return Text("data7");// _buildSuggestionItem(suggestions[index]);
+          return  _buildSuggestionItem(suggestions[index]);
         },
       ),
     );
