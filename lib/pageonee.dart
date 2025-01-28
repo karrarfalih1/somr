@@ -17,9 +17,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 ///////////////////////////new work
 List mydata=[];
+List mydatabay=[];
+List mydataagar=[];
 GetData()async{
 QuerySnapshot querySnapshot=await FirebaseFirestore.instance.collection('users').get();
 mydata.addAll(querySnapshot.docs.map((doc) => doc.data()).toList());
+QuerySnapshot querySnapshotbay=await FirebaseFirestore.instance.collection('users').where('bay',isEqualTo: true).get();
+mydataagar.addAll(querySnapshotbay.docs.map((doc)=>doc.data()).toList());
+
+QuerySnapshot querySnapshotagar=await FirebaseFirestore.instance.collection('users').where('bay',isEqualTo: false).get();
+mydatabay.addAll(querySnapshotagar.docs.map((doc)=>doc.data()).toList());
+
 print(mydata);
 }
 ///////////////////////
@@ -68,8 +76,8 @@ print(mydata);
    
   @override
   Widget build(BuildContext context) {
-  Stream<QuerySnapshot> userStream =
-      FirebaseFirestore.instance.collection('users').snapshots();
+  //Stream<QuerySnapshot> userStream =
+  //    FirebaseFirestore.instance.collection('users').snapshots();
     
     return MaterialApp(
       home: Scaffold(
@@ -80,41 +88,11 @@ print(mydata);
         body: Container(
        child:  ListView(
       children: [
-        _buildImageCarousel(),
-        _buildCategoryRow(),
-        _buildHorizontalSuggestions(),
+       _buildImageCarousel(),
+       _buildCategoryRow(),
+       _buildHorizontalSuggestions(),
        _buildSuggestionsTitle(),
-/////////////////
-StreamBuilder<QuerySnapshot>(
-  stream: userStream,
-  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  
-    if (snapshot.hasError) {
-      return _buildErrorWidget(snapshot.error);
-    }
-
-    // إذا كانت البيانات لا تزال قيد التحميل
-    if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
-      // إذا كان هناك بيانات مخزنة مؤقتًا، اعرضها
-      if (snapshot.data != null && snapshot.data!.docs.isNotEmpty) {
-      //    mydata.addAll(snapshot.data!.docs);
-        return _buildGridView(snapshot.data!.docs);
-      }
-      // إذا لم تكن هناك بيانات مخزنة مؤقتًا، اعرض مؤقت التحميل
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    // عرض البيانات عندما تكون متوفرة
-    if (snapshot.data!.docs.isEmpty) {
-      return const Center(child: Text('لا توجد بيانات متوفرة'));
-    }
-
-    return  _buildGridView(snapshot.data!.docs);
-  },
-)
-     
-        ///////////////////
-      ],
+       _buildGridView(mydata) ],
     ),
         ),
       ),
@@ -206,10 +184,12 @@ print(mydata);
 
               print("111111111111111");
               print(mydata);
-        //  setState(() {
-       //       bay=false;
-        //       egar=true;
-       //   });
+          setState(() {
+            mydata.clear();
+            mydata.addAll(mydataagar);
+             bay=false;
+               egar=true;
+       });
               
              
             },
@@ -235,8 +215,11 @@ print(mydata);
               print("---------------");
            //   print()
           setState(() {
+             mydata.clear();
+            mydata.addAll(mydatabay);
               bay=true;
                 egar=false;
+                print(mydata);
           });
               
             
@@ -338,12 +321,12 @@ print(mydata);
     );
   }
 
-  Widget _buildGridView(List<QueryDocumentSnapshot> docs) {
+  Widget _buildGridView( mydata) {
     return InkWell(
       child: GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: docs.length,
+        itemCount: mydata.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.65,
