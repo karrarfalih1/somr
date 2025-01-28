@@ -213,7 +213,9 @@ class _mystate extends State<signup> {
                     if (_formKey.currentState!.validate() &&
                         emailError.isEmpty &&
                         passwordError.isEmpty) {
+                          print("ok1");
                       try {
+                        print("ok2");
                         final credential = await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
                           email: controllerEmail.text,
@@ -228,6 +230,7 @@ class _mystate extends State<signup> {
                           }, child: const Text("ok"))],);
                         });
                       } on FirebaseAuthException catch (e) {
+                        print("not ok1");
                         if (e.code == 'email-already-in-use') {
                        //   FirebaseAuth.instance.currentUser!.sendEmailVerification();
                            showDialog(context: context, builder: (context){

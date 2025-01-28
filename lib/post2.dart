@@ -35,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: DropdownButton<String>(
           hint: const Text("اختر خيارًا"),
           value: selectedOption,
-          items: <String>['الخيار الأول', 'الخيار الثاني', 'الخيار الثالث']
+          items: <String>['الخيار الأول','الخيار الثاني', 'الخيار الثالث']
               .map((String valuee) {
             return DropdownMenuItem<String>(
               value: valuee,

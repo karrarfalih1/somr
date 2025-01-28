@@ -53,10 +53,10 @@ print(value);
      //"View":(context)=>Vieww()
       },
 home:(FirebaseAuth.instance.currentUser !=null && FirebaseAuth.instance.currentUser!.emailVerified)? const HomePage():const Login()
-  //  home:FirebaseAuth.instance.currentUser !=null ? Pageonee():Login()
-    //home:Upload();
+    //  home:FirebaseAuth.instance.currentUser !=null ? Pageonee():Login()
+     //home:Upload();
     //home:Login();
-  //  home:const HomePage() ,
+    //  home:const HomePage() ,
    // home:Pageonee()
     // home:realtime();
     );

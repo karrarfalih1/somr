@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:somer/viewhose.dart';
 // افتراضًا أن هذه حزمك الخاصة
   bool bay=false;
   bool egar=false;
@@ -14,8 +15,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
+///////////////////////////new work
+List mydata=[];
+GetData()async{
+QuerySnapshot querySnapshot=await FirebaseFirestore.instance.collection('users').get();
+mydata.addAll(querySnapshot.docs.map((doc) => doc.data()).toList());
+print(mydata);
+}
+///////////////////////
   List<String> imagePaths = [
     "images/home2.jpg",
     "images/home2.jpg",
@@ -30,11 +37,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+   GetData();
     super.initState();
     _pageController = PageController(initialPage: _currentPage);
     _startAutoPageChange();
-  }
 
+  }
+                                                                                                    
   void _startAutoPageChange() {
     _timer = Timer.periodic(const Duration(seconds: 10), (Timer timer) {
       setState(() {
@@ -60,9 +69,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
   Stream<QuerySnapshot> userStream =
-      FirebaseFirestore.instance.collection('users').where("bay",isEqualTo:egar).snapshots();
+      FirebaseFirestore.instance.collection('users').snapshots();
     
-
     return MaterialApp(
       home: Scaffold(
         
@@ -70,12 +78,17 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: _buildFloatingActionButton(),
         appBar: _buildAppBar(),
         body: Container(
-          
-          color: Colors.grey[200],
-          
-          child: StreamBuilder<QuerySnapshot>(
+       child:  ListView(
+      children: [
+        _buildImageCarousel(),
+        _buildCategoryRow(),
+        _buildHorizontalSuggestions(),
+       _buildSuggestionsTitle(),
+/////////////////
+StreamBuilder<QuerySnapshot>(
   stream: userStream,
   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  
     if (snapshot.hasError) {
       return _buildErrorWidget(snapshot.error);
     }
@@ -84,6 +97,7 @@ class _HomePageState extends State<HomePage> {
     if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
       // إذا كان هناك بيانات مخزنة مؤقتًا، اعرضها
       if (snapshot.data != null && snapshot.data!.docs.isNotEmpty) {
+      //    mydata.addAll(snapshot.data!.docs);
         return _buildGridView(snapshot.data!.docs);
       }
       // إذا لم تكن هناك بيانات مخزنة مؤقتًا، اعرض مؤقت التحميل
@@ -95,24 +109,13 @@ class _HomePageState extends State<HomePage> {
       return const Center(child: Text('لا توجد بيانات متوفرة'));
     }
 
-    return ListView(
-      children: [
-        _buildImageCarousel(),
-        _buildCategoryRow(),
-        _buildHorizontalSuggestions(),
-        _buildSuggestionsTitle(),
-        _buildGridView(snapshot.data!.docs),
-      ],
-    );
+    return  _buildGridView(snapshot.data!.docs);
   },
-),
-
-
-
-
-
-
-
+)
+     
+        ///////////////////
+      ],
+    ),
         ),
       ),
     );
@@ -128,13 +131,19 @@ class _HomePageState extends State<HomePage> {
           await FirebaseAuth.instance.signOut();
         },
       ),
-      title: const Center(
-        child: Text(
-          'عقارات',
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
+      title:  Center(
+        child: InkWell(
+          onTap:(){
+print("1111111111ks");
+print(mydata);
+          },
+          child: Text(
+            'عقارات',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
@@ -194,10 +203,13 @@ class _HomePageState extends State<HomePage> {
          Expanded(
            child: InkWell(
             onTap: (){
-          setState(() {
-              bay=false;
-                egar=true;
-          });
+
+              print("111111111111111");
+              print(mydata);
+        //  setState(() {
+       //       bay=false;
+        //       egar=true;
+       //   });
               
              
             },
@@ -275,7 +287,7 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: Axis.horizontal, 
         itemCount: 2,
         itemBuilder: (context, index) {
-          return Text("data");// _buildSuggestionItem(suggestions[index]);
+          return Text("data7");// _buildSuggestionItem(suggestions[index]);
         },
       ),
     );
@@ -337,32 +349,34 @@ class _HomePageState extends State<HomePage> {
           childAspectRatio: 0.65,
         ),
         itemBuilder: (context, index) {
-          final doc = docs[index];
+          final doc = mydata[index];
           return _buildGridItem(doc);
         },
       ),
     );
   }
 
-  Widget _buildGridItem(QueryDocumentSnapshot doc) {
+  Widget _buildGridItem( doc) {
     return InkWell(
       onTap: () {
-      //  Navigator.of(context).push(MaterialPageRoute(
-       //     builder: (context) => Vieww(
-       //       postlocation2: doc["postlocation2"],
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Vieww(
+             postlocation2: doc["postlocation2"],
               
-        //      nuberOftapk:doc["nuberOftapk"],
-        //      numberofroom: doc["numberofroom"],
-       //       mo: doc["mo"],
-       //       bay: doc["bay"],
-       //       postphone: doc["postphone"],
-         //     posttitle: doc["posttitle"],
-           ///       price: doc["postprice"],
-              //    posturl: doc["posturl"],
-              //    postlocation: doc['postlocation'], postsize: doc["postsize"],
-               // )));
+             nuberOftapk:doc["nuberOftapk"],
+             numberofroom: doc["numberofroom"],
+             mo: doc["mo"],
+          bay: doc["bay"],
+              postphone: doc["postphone"],
+             posttitle: doc["posttitle"],                                                                                                                                                                                           
+                                                          
+                                                                       
+                  price: doc["postprice"],
+                 posturl: doc["posturl"],
+                 postlocation: doc['postlocation'], postsize: doc["postsize"],
+               )));
       },
-      child:bay==true && doc["bay"]==false? Container(
+      child:Container(
         decoration: const BoxDecoration(
           //   color: Colors.blue,
           borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -379,41 +393,7 @@ class _HomePageState extends State<HomePage> {
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   child: Image.network(doc['posturl'], fit: BoxFit.cover),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-             Text(doc['postprice'], style: const TextStyle(fontSize: 20)),
-            Text(doc['posttitle'], style: const TextStyle(fontSize: 16,color: Colors.grey)),
-             Text(doc['postsize'], style: const TextStyle(fontSize: 16,color: Colors.grey)),
-           
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(doc['postlocation']),
-                const Icon(Icons.location_on),
-              ],
-            ),
-          ],
-        ),
-      ):Container(
-        decoration: const BoxDecoration(
-          //   color: Colors.blue,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
-        margin: const EdgeInsets.all(5),
-        padding: const EdgeInsets.all(5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SizedBox(
-                width: 200,
-                //  color: Colors.amber,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: Image.network(doc['posturl'], fit: BoxFit.cover),
-               
+
                 ),
               ),
             ),
