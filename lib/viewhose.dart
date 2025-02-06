@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:somer/materal/titlesignin.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 class Vieww extends StatelessWidget {
   final String price;
   final String posturl;
@@ -13,6 +13,7 @@ class Vieww extends StatelessWidget {
   final String nuberOftapk;
   final String postphone;
   final String postsize;
+    final String gov;
   const Vieww(
 
       {super.key,
@@ -27,13 +28,13 @@ class Vieww extends StatelessWidget {
       required this.price,
       required this.posturl,
       required this.postlocation,
-      required this.posttitle});
+      required this.posttitle, required this.gov});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Container(
-          padding: const EdgeInsets.all(10),
+        body: SizedBox(
+        //  padding: const EdgeInsets.all(10),
           //  height: 00,
           width: 2000,
           child: ListView(
@@ -41,12 +42,14 @@ class Vieww extends StatelessWidget {
               SizedBox(
                 width: 2000,
                 height: 270,
-                child: Image.network(
-                  posturl,
-                  fit: BoxFit.cover,
-                ),
+               
+                child: Hero(
+                  tag: posturl,
+                  child: ClipRRect(
+                    borderRadius:const BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight: Radius.circular(20)),
+                    child: CachedNetworkImage(imageUrl: posturl,fit: BoxFit.cover,)))
               ),
-              Container(
+              Container( 
                 margin: const EdgeInsets.only(bottom: 6),
                 color: Colors.blue,
                 height: 0.1,

@@ -45,6 +45,9 @@ print(value);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+    
+     
+      debugShowCheckedModeBanner: false,
       routes: {
            "signup":(context)=>const signup() ,
            "login":(context)=>const Login(),
@@ -53,12 +56,7 @@ print(value);
      //"View":(context)=>Vieww()
       },
 home:(FirebaseAuth.instance.currentUser !=null && FirebaseAuth.instance.currentUser!.emailVerified)? const HomePage():const Login()
-     //  home:FirebaseAuth.instance.currentUser !=null ? Pageonee():Login()
-     //home:Upload();
-     //home:Login();
-     //  home:const HomePage() ,
-     // home:Pageonee()
-     // home:realtime();
+
     );
   }
 

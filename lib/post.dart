@@ -19,20 +19,38 @@ class Post extends StatefulWidget {
 class _Mystate extends State<Post> {
   String? selectpotionofnumberofroom;
   String? selectpotionoftabk;
+  String? selectgov;
   final _formKey = GlobalKey<FormState>();
   String? url;
   File? file1;
   bool mo1 = true;
   bool nomo = false;
-   bool egar = true;
+  bool egar = true;
+
   bool bay = false;
+  List<String> suggestions = [
+    "بغداد",
+    "ذي قار",
+    "بصرة",
+    "سماوة",
+    "ميسان",
+    "تكريت",
+    "النجف",
+    "كربلاء",
+    "الانبار",
+    "تكريت",
+    "كركوك",
+    "السليمانية"
+  ];
+
   TextEditingController postprice = TextEditingController();
   TextEditingController posttitle = TextEditingController();
   TextEditingController postlocation = TextEditingController();
-    TextEditingController postlocation2 = TextEditingController();
+  TextEditingController postlocation2 = TextEditingController();
   TextEditingController postdescription = TextEditingController();
   TextEditingController postsize = TextEditingController();
-   TextEditingController postphone = TextEditingController();
+  TextEditingController postphone = TextEditingController();
+
   // Function to pick an image from the gallery
   Future<void> getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -57,14 +75,15 @@ class _Mystate extends State<Post> {
       "postprice": postprice.text,
       "posttitle": posttitle.text,
       "postlocation": postlocation.text,
-      "postlocation2":postlocation2.text,
+      "postlocation2": postlocation2.text,
       "posturl": url.toString(),
-      "postsize":postsize.text,
-      "postphone":postphone.text,
-      "mo":mo1,
-      "bay":bay,
-      "numberofroom":selectpotionofnumberofroom.toString(),
-      "nuberOftapk":selectpotionoftabk.toString(),
+      "postsize": postsize.text,
+      "postphone": postphone.text,
+      "mo": mo1,
+      "bay": bay,
+      "numberofroom": selectpotionofnumberofroom.toString(),
+      "nuberOftapk": selectpotionoftabk.toString(),
+      "gov": selectgov.toString()
     });
   }
 
@@ -113,7 +132,7 @@ class _Mystate extends State<Post> {
                   height: 15,
                 ),
                 clatext(
-                keyboardtype:TextInputType.number,
+                  keyboardtype: TextInputType.number,
                   hinttext: 'السعر',
                   mycontroller: postprice,
                   validator: (val) {
@@ -123,32 +142,55 @@ class _Mystate extends State<Post> {
                     return null;
                   },
                 ),
-               
-                          const SizedBox(
-                    height: 15,
-                  ),
-                  clatext(
-                    hinttext: 'المحافضة',
-                    mycontroller: postlocation,
-                    validator: (val) {
-                      if (val == "") {
-                        return "هذا الحقل مطلوب";
-                      }
-                      return null;
-                    },
-                  ),      const SizedBox(
-                    height: 15,
-                  ),
-                  clatext(
-                    hinttext: 'القضاء او الحي  واقرب نقطه داله',
-                    mycontroller:postlocation2,
-                    validator: (val) {
-                      if (val == "") {
-                        return "هذا الحقل مطلوب";
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: DropdownButton<String>(
+                      //هذا لالغاء الخط الخفيف في  البوتوم
+                      underline: const SizedBox.shrink(),
+                      value: selectgov,
+                      hint: const Text("المحافضة "),
+                      items: <String>[
+                        suggestions[0],
+                        suggestions[1],
+                        suggestions[2],
+                        suggestions[3],
+                        suggestions[4],
+                        suggestions[5],
+                        suggestions[6],
+                        suggestions[7],
+                        suggestions[8],
+                        suggestions[9],
+                        suggestions[10],
+                        suggestions[11]
+                      ].map((String valuee) {
+                        return DropdownMenuItem<String>(
+                          value: valuee,
+                          child: Text("     $valuee"),
+                        );
+                      }).toList(),
+                      onChanged: (String? newvalue) {
+                        setState(() {
+                          selectgov = "$newvalue";
+                        });
+                      }),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                clatext(
+                  hinttext: 'القضاء او الحي  واقرب نقطه داله',
+                  mycontroller: postlocation2,
+                  validator: (val) {
+                    if (val == "") {
+                      return "هذا الحقل مطلوب";
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -166,7 +208,7 @@ class _Mystate extends State<Post> {
                   height: 15,
                 ),
                 clatext(
-                    keyboardtype:TextInputType.number,
+                  keyboardtype: TextInputType.number,
                   hinttext: 'المساحة ',
                   mycontroller: postsize,
                   validator: (val) {
@@ -180,7 +222,7 @@ class _Mystate extends State<Post> {
                   height: 15,
                 ),
                 clatext(
-                    keyboardtype:TextInputType.number,
+                  keyboardtype: TextInputType.number,
                   hinttext: 'رقم الهاتف ',
                   mycontroller: postphone,
                   validator: (val) {
@@ -218,13 +260,50 @@ class _Mystate extends State<Post> {
                               nomo = true;
                             });
                           },
-                          colorr:
-                              nomo == true ? Colors.blue[50] : Colors.grey[200]),
-                              
+                          colorr: nomo == true
+                              ? Colors.blue[50]
+                              : Colors.grey[200]),
                     ],
                   ),
-                ),const SizedBox(height: 15,),
-                 SizedBox(
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 50,
+                  child: Row(
+                    //   height:23,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Chose(
+                          titlle: 'زراعي',
+                          ontap: () {
+                            setState(() {
+                              mo1 = true;
+                              nomo = false;
+                            });
+                          },
+                          colorr:
+                              mo1 == true ? Colors.blue[50] : Colors.grey[200]),
+                      Chose(
+                          titlle: 'طابو',
+                          ontap: () {
+                            setState(() {
+                              mo1 = false;
+                              nomo = true;
+                            });
+                          },
+                          colorr: nomo == true
+                              ? Colors.blue[50]
+                              : Colors.grey[200]),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
                   height: 50,
                   child: Row(
                     //   height:23,
@@ -239,8 +318,9 @@ class _Mystate extends State<Post> {
                               bay = false;
                             });
                           },
-                          colorr:
-                              egar == true ? Colors.blue[50] : Colors.grey[200]),
+                          colorr: egar == true
+                              ? Colors.blue[50]
+                              : Colors.grey[200]),
                       Chose(
                           titlle: 'للايجار',
                           ontap: () {
@@ -250,86 +330,116 @@ class _Mystate extends State<Post> {
                             });
                           },
                           colorr:
-                              bay == true ? Colors.blue[50] : Colors.grey[200]),  ],
+                              bay == true ? Colors.blue[50] : Colors.grey[200]),
+                    ],
                   ),
-                ),const SizedBox(height: 15,)
-                ,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                  
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                  Container(
-                    decoration: BoxDecoration(
-                       color: selectpotionoftabk==null?Colors.grey[200]:Colors.blue[50], 
-                   
-                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),bottomRight: Radius.circular(30))
+                    Container(
+                      decoration: BoxDecoration(
+                          color: selectpotionoftabk == null
+                              ? Colors.grey[200]
+                              : Colors.blue[50],
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30))),
+                      width: 150,
+                      height: 50,
+                      child: DropdownButton<String>(
+                          //هذا لالغاء الخط الخفيف في  البوتوم
+                          underline: const SizedBox.shrink(),
+                          value: selectpotionoftabk,
+                          hint: const Text("          عدد الطوابق"),
+                          items: <String>["1", "2", "3", "4", "5"]
+                              .map((String valuee) {
+                            return DropdownMenuItem<String>(
+                                value: valuee,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("     $valuee"),
+                                    const Text(" عدد الطوابق   "),
+                                  ],
+                                ));
+                          }).toList(),
+                          onChanged: (String? newvalue) {
+                            setState(() {
+                              selectpotionoftabk = "$newvalue";
+                            });
+                          }),
                     ),
-                    width: 150,
-                    height: 50,
-                    child: DropdownButton<String>(
-                      //هذا لالغاء الخط الخفيف في  البوتوم
-                      underline: const SizedBox.shrink(),
-                        value: selectpotionoftabk,
-                        hint: const Text("          عدد الطوابق"),
-                        items:<String>["1","2","3","4","5"]
-                        .map((String valuee){
-                          return DropdownMenuItem<String>(
-                             value : valuee,
-                             child:Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text("     $valuee"),const Text(" عدد الطوابق   "),],)
-
-                          );
-                        }).toList(), onChanged:(String? newvalue){
-                          setState(() {
-                            selectpotionoftabk="$newvalue";
-                          });
-                        }),
-                  ),
-                      Container(
-                     decoration: BoxDecoration(
-                       color:
-                       
-                       selectpotionofnumberofroom==null?Colors.grey[200]:Colors.blue[50], 
-                   
-                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),bottomRight: Radius.circular(30))
+                    Container(
+                      decoration: BoxDecoration(
+                          color: selectpotionofnumberofroom == null
+                              ? Colors.grey[200]
+                              : Colors.blue[50],
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30))),
+                      width: 150,
+                      height: 50,
+                      child: DropdownButton<String>(
+                          //هذا لالغاء الخط الخفيف في  البوتوم
+                          underline: const SizedBox.shrink(),
+                          value: selectpotionofnumberofroom,
+                          hint: const Text("         عدد الغرف"),
+                          items: <String>[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10",
+                            "11",
+                            "12",
+                            "13",
+                            "14",
+                            "15",
+                            "16"
+                          ].map((String valuee) {
+                            return DropdownMenuItem<String>(
+                                value: valuee,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("     $valuee"),
+                                    const Text(" عدد الغرف   "),
+                                  ],
+                                ));
+                          }).toList(),
+                          onChanged: (String? newvalue) {
+                            setState(() {
+                              selectpotionofnumberofroom = "$newvalue";
+                            });
+                          }),
                     ),
-                    width: 150,
-                    height: 50,
-                        child: DropdownButton<String>(
-                           //هذا لالغاء الخط الخفيف في  البوتوم
-                      underline: const SizedBox.shrink(),
-                        value: selectpotionofnumberofroom,
-                        hint: const Text("         عدد الغرف"      ),
-                        items:<String>["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"]
-                        .map((String valuee){
-                          return DropdownMenuItem<String>(
-                             value : valuee,
-                             child:Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text("     $valuee"),const Text(" عدد الغرف   "),],)
-                          
-                          
-                          );
-                        }).toList(), onChanged:(String? newvalue){
-                          setState(() {
-                            selectpotionofnumberofroom="$newvalue";
-                          
-                          });
-                        }),
-                      ),
-                     
-                ],), const SizedBox(height: 30,),
-                      botomc(onpressed: () { 
-                       if(_formKey.currentState!.validate()){
-                      
-                              addPost();
-                          //    Navigator.of(context).pushNamed("pageone");
-                                Navigator.of(context).pop();
-                            }
-          
-          
-                       }, textbotum: 'نشر',)
-
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                botomc(
+                  onpressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      addPost();
+                      //    Navigator.of(context).pushNamed("pageone");
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  textbotum: 'نشر',
+                )
               ],
             ),
           ),
