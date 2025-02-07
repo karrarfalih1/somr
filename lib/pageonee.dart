@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:somer/post.dart';
 import 'package:somer/viewhose.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -49,11 +51,7 @@ advertisment.addAll(querySnapshotadv.docs.map((doc) => doc.data()).toList());
     
   }
 
-  List<String> imagePaths = [
-    "images/home2.jpg",
-    "images/home2.jpg",
-    "images/home2.jpg",
-    "images/home2.jpg"  ];
+
 
   List<String> suggestions = ["الكل","بغداد", "ذي قار","بصرة","سماوة","ميسان","تكريت","النجف","كربلاء","الانبار","تكريت","كركوك","السليمانية"];
 govfilter(List govlist,govselect){
@@ -120,7 +118,7 @@ data.addAll(govlistgeneral);
       
       home: Scaffold(
         
-        endDrawer: _buildDrawer(),
+      
         floatingActionButton: _buildFloatingActionButton(),
       //  appBar: _buildAppBar(),
         body: SizedBox(
@@ -140,28 +138,16 @@ data.addAll(govlistgeneral);
   }
 
 
-  Drawer _buildDrawer() {
-    return Drawer(
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: ListView(
-          children: const [
-            // Add drawer items here
-          ],
-        ),
-      ),
-    );
-  }
-
   FloatingActionButton _buildFloatingActionButton() {
     return FloatingActionButton(
+      backgroundColor: Colors.blueGrey,
       onPressed: () {
              Navigator.of(context).push(MaterialPageRoute(
                builder: (context) => Post(
                    catogreyid: FirebaseAuth.instance.currentUser!.uid,
                )));
       },
-      child: const Icon(Icons.post_add),
+      child: const Icon(Icons.post_add,color: Colors.white ,),
     );
   }
 
@@ -176,7 +162,7 @@ data.addAll(govlistgeneral);
           itemCount: advertisment.length,
           itemBuilder: (context, index) {
             return ClipRRect(
-              borderRadius:  BorderRadius.all(Radius.circular(20)),
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
               child: CachedNetworkImage(
 
 imageUrl: "${advertisment[index]['adv']}",
@@ -387,7 +373,7 @@ govfilter(mydataagar,govselect);
        padding:const EdgeInsets.all(10),
           child:const Text(
             'اقتراحات قد تعجبك',
-            style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.blueGrey),
           ),
         ),
       ),
@@ -406,13 +392,18 @@ govfilter(mydataagar,govselect);
           ),
           itemBuilder: (context, index) {
           final doc = localdata[index];
-          return _buildGridItem(doc);
+
+Timestamp timestamp = doc['time']; // جلب الـ Timestamp من Firestore
+DateTime dateTime = timestamp.toDate(); // تحويله إلى DateTime
+
+String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime); 
+          return _buildGridItem(doc,formattedDate);
         },
       ),
     );
   }
 
-  Widget _buildGridItem(doc) {
+  Widget _buildGridItem(doc,locformattedDate) {
     return Card(
       child: InkWell(
         onTap: () {
@@ -424,12 +415,14 @@ govfilter(mydataagar,govselect);
                     gov:doc['gov'],
                     mo: doc["mo"],
                     bay: doc["bay"],
+                    agric:doc["agric"],
                     postphone: doc["postphone"],
                     posttitle: doc["posttitle"],
                     price: doc["postprice"],
                     posturl: doc["posturl"],
                     postlocation: doc['postlocation'],
                     postsize: doc["postsize"],
+                     time: locformattedDate,
                     )));
         },
         child: Container(
@@ -464,8 +457,11 @@ govfilter(mydataagar,govselect);
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  Text("${locformattedDate}"),
+                  Spacer(),
                   Text(doc['postlocation']),
                   const Icon(Icons.location_on),
+
                 ],
               ),
             ],

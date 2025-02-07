@@ -8,12 +8,14 @@ class Vieww extends StatelessWidget {
   final String posttitle;
   final bool bay;
   final bool mo;
+  final bool agric;
   final String numberofroom;
   final String postlocation2;
   final String nuberOftapk;
   final String postphone;
   final String postsize;
-    final String gov;
+  final String gov;
+  final String time;
   const Vieww(
 
       {super.key,
@@ -28,7 +30,7 @@ class Vieww extends StatelessWidget {
       required this.price,
       required this.posturl,
       required this.postlocation,
-      required this.posttitle, required this.gov});
+      required this.posttitle, required this.gov, required this.agric, required this.time});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -175,6 +177,28 @@ class Vieww extends StatelessWidget {
                   Icons.chair,
                   size: 18,
                 ),
+              ),     ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(agric==true?"طابو":"زراعي"
+                     ,
+                      textDirection: TextDirection.rtl,
+                      style:
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      " الصنف :",
+                      textDirection: TextDirection.rtl,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                trailing: const Icon(
+                  Icons.chair,
+                  size: 18,
+                ),
               ),
               ListTile(
                 title: Row(
@@ -215,10 +239,35 @@ class Vieww extends StatelessWidget {
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
+                  
                   ],
                 ),
                 trailing: const Icon(
                   Icons.phone,
+                  size: 18,
+                ),
+              ),
+                 ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                     time,
+                      textDirection: TextDirection.rtl,
+                      style:
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      "  تاريخ النشر :",
+                      textDirection: TextDirection.rtl,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                  
+                  ],
+                ),
+                trailing: const Icon(
+                  Icons.date_range,
                   size: 18,
                 ),
               ),

@@ -27,6 +27,7 @@ class _Mystate extends State<Post> {
   bool nomo = false;
   bool egar = true;
 
+bool agric=true;
   bool bay = false;
   List<String> suggestions = [
     "بغداد",
@@ -83,7 +84,9 @@ class _Mystate extends State<Post> {
       "bay": bay,
       "numberofroom": selectpotionofnumberofroom.toString(),
       "nuberOftapk": selectpotionoftabk.toString(),
-      "gov": selectgov.toString()
+      "gov": selectgov.toString(),
+      "agric":agric,
+      "time": FieldValue.serverTimestamp(),
     });
   }
 
@@ -145,14 +148,24 @@ class _Mystate extends State<Post> {
                 const SizedBox(
                   height: 15,
                 ),
-                SizedBox(
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 100),
+                  decoration: BoxDecoration(
+
+                    color: Colors.blue[50],
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      
+                    
+                    )
+                  ),
                   width: 150,
                   height: 50,
                   child: DropdownButton<String>(
                       //هذا لالغاء الخط الخفيف في  البوتوم
                       underline: const SizedBox.shrink(),
                       value: selectgov,
-                      hint: const Text("المحافضة "),
+                      hint: Container( child: Center(child: const Text("المحافضة "))),
                       items: <String>[
                         suggestions[0],
                         suggestions[1],
@@ -280,21 +293,19 @@ class _Mystate extends State<Post> {
                           titlle: 'زراعي',
                           ontap: () {
                             setState(() {
-                              mo1 = true;
-                              nomo = false;
+                           agric=false;
                             });
                           },
                           colorr:
-                              mo1 == true ? Colors.blue[50] : Colors.grey[200]),
+                              agric == false ? Colors.blue[50] : Colors.grey[200]),
                       Chose(
                           titlle: 'طابو',
                           ontap: () {
                             setState(() {
-                              mo1 = false;
-                              nomo = true;
+                            agric=true;
                             });
                           },
-                          colorr: nomo == true
+                          colorr: agric == true
                               ? Colors.blue[50]
                               : Colors.grey[200]),
                     ],

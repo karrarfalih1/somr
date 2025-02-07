@@ -377,7 +377,7 @@ govfilter(mydata);
                     price: doc["postprice"],
                     posturl: doc["posturl"],
                     postlocation: doc['postlocation'],
-                    postsize: doc["postsize"],
+                    postsize: doc["postsize"], agric: true, time: '',
                     )));
         },
         child: Container(
