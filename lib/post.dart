@@ -149,7 +149,7 @@ bool agric=true;
                   height: 15,
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 100),
+                  padding:const EdgeInsets.symmetric(horizontal: 100),
                   decoration: BoxDecoration(
 
                     color: Colors.blue[50],
@@ -165,7 +165,7 @@ bool agric=true;
                       //هذا لالغاء الخط الخفيف في  البوتوم
                       underline: const SizedBox.shrink(),
                       value: selectgov,
-                      hint: Container( child: Center(child: const Text("المحافضة "))),
+                      hint: Container( child: const Center(child: Text("المحافضة "))),
                       items: <String>[
                         suggestions[0],
                         suggestions[1],
@@ -279,7 +279,7 @@ bool agric=true;
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 SizedBox(
@@ -443,11 +443,19 @@ bool agric=true;
                 ),
                 botomc(
                   onpressed: () {
-                    if (_formKey.currentState!.validate()) {
+                    if(url !=null){   if (_formKey.currentState!.validate()) {
                       addPost();
                       //    Navigator.of(context).pushNamed("pageone");
                       Navigator.of(context).pop();
+                    }}else{
+                    showDialog(context: context, builder: (context){
+                      return const AlertDialog(
+                        title: Text("تنبيه"),
+                       content:  Text("يجب  تحديد صورة للعقار"),
+                      );
+                    });
                     }
+                 
                   },
                   textbotum: 'نشر',
                 )

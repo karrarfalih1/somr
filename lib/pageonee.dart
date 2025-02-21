@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,9 +8,10 @@ import 'package:somer/viewhose.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 // افتراضًا أن هذه حزمك الخاصة
 bool bay = false;
-bool egar = false;
-bool all =true;
-int governorate=0;
+     bool egar = false;
+bool all = true;
+int governorate = 0;
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -20,20 +20,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-///////////////////////////new work
+  
+  
   List mydata = [];
-   List data = [];
+  List data = [];
   List mydatabay = [];
+
   List mydataagar = [];
-   List govlistgeneral = [];
-   List advertisment=[];
-   String? govselect;
-   getadvertiameent()async{
-QuerySnapshot querySnapshotadv=
-await FirebaseFirestore.instance.collection("advertisement").get();
-advertisment.addAll(querySnapshotadv.docs.map((doc) => doc.data()).toList());
-   }
+  List govlistgeneral = [];
+  List advertisment = [];
+  String? govselect;
+  getadvertiameent() async {
+    QuerySnapshot querySnapshotadv =
+        await FirebaseFirestore.instance.collection("advertisement").get();
+    advertisment.addAll(querySnapshotadv.docs.map((doc) => doc.data()).toList());
+  }
+
   GetData() async {
+     _timer?.cancel();
+    _pageController?.dispose();
+    advertisment.clear();
+    govlistgeneral.clear();
+mydatabay.clear();
+    mydataagar.clear();
+    mydata.clear();
+    data.clear();
+
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('users').get();
     mydata.addAll(querySnapshot.docs.map((doc) => doc.data()).toList());
@@ -41,52 +53,60 @@ advertisment.addAll(querySnapshotadv.docs.map((doc) => doc.data()).toList());
         .collection('users')
         .where('bay', isEqualTo: true)
         .get();
-        data.addAll(mydata);
+    data.addAll(mydata);
     mydataagar.addAll(querySnapshotbay.docs.map((doc) => doc.data()).toList());
     QuerySnapshot querySnapshotagar = await FirebaseFirestore.instance
         .collection('users')
         .where('bay', isEqualTo: false)
         .get();
-    mydatabay.addAll(querySnapshotagar.docs.map((doc) => doc.data()).toList());  
-    
+    mydatabay.addAll(querySnapshotagar.docs.map((doc) => doc.data()).toList());
   }
 
+  List<String> suggestions = [
+    "الكل",
+    "بغداد",
+    "ذي قار",
+    "بصرة",
+    "سماوة",
+    "ميسان",
+    "تكريت",
+    "النجف",
+    "كربلاء",
+    "الانبار",
+    "تكريت",
+    "كركوك",
+    "السليمانية"
+  ];
+  govfilter(List govlist, govselect) {
+    data.clear();
 
+    govlistgeneral.clear();
+    if (governorate == 0) {
+      data.addAll(govlist);
+    } else {
+      for (int i = 0; i < govlist.length; i++) {
+        if (govlist[i]['gov'] == govselect) {
+          govlistgeneral.add(govlist[i]);
 
-  List<String> suggestions = ["الكل","بغداد", "ذي قار","بصرة","سماوة","ميسان","تكريت","النجف","كربلاء","الانبار","تكريت","كركوك","السليمانية"];
-govfilter(List govlist,govselect){
-  data.clear();
-  
-  govlistgeneral.clear();
-  if(governorate==0){
-   
-data.addAll(govlist);
-  }else{
-  
-for (int i =0; i <  govlist.length; i++) {
-  
-  if(govlist[i]['gov']==govselect){
-   
-govlistgeneral.add(govlist[i]);
-
-data.addAll(govlistgeneral);
+          data.addAll(govlistgeneral);
+        }
+      }
+    }
   }
-}
-  }
 
-}
   Timer? _timer;
   int _currentPage = 1;
   PageController? _pageController;
 
   @override
   void initState() {
-     GetData();
-     getadvertiameent();
+    GetData();
+    getadvertiameent();
     super.initState();
     _pageController = PageController(initialPage: _currentPage);
     _startAutoPageChange();
-    } 
+  }
+
   void _startAutoPageChange() {
     _timer = Timer.periodic(const Duration(seconds: 10), (Timer timer) {
       setState(() {
@@ -115,12 +135,9 @@ data.addAll(govlistgeneral);
     //    FirebaseFirestore.instance.collection('users').snapshots();
 
     return MaterialApp(
-      
       home: Scaffold(
-        
-      
         floatingActionButton: _buildFloatingActionButton(),
-      //  appBar: _buildAppBar(),
+        //  appBar: _buildAppBar(),
         body: SizedBox(
           child: ListView(
             children: [
@@ -137,61 +154,95 @@ data.addAll(govlistgeneral);
     );
   }
 
-
-  FloatingActionButton _buildFloatingActionButton() {
+    FloatingActionButton _buildFloatingActionButton() {
     return FloatingActionButton(
-      backgroundColor: Colors.blueGrey,
-      onPressed: () {
-             Navigator.of(context).push(MaterialPageRoute(
-               builder: (context) => Post(
-                   catogreyid: FirebaseAuth.instance.currentUser!.uid,
-               )));
+        backgroundColor: Colors.blueGrey,
+        onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => Post(
+                  catogreyid: FirebaseAuth.instance.currentUser!.uid,
+   )));
       },
-      child: const Icon(Icons.post_add,color: Colors.white ,),
+      child: const Icon(
+        Icons.post_add,
+        color: Colors.white,
+      ),
     );
   }
 
   Widget _buildImageCarousel() {
     return Stack(
-    children: [
-    
-      SizedBox(
-        height: 270,
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: advertisment.length,
-          itemBuilder: (context, index) {
-            return ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              child: CachedNetworkImage(
-
-imageUrl: "${advertisment[index]['adv']}",
-               
-                fit: BoxFit.cover,
-              ),
-            );
-          },
-        ),
-      ),
-     const   SizedBox(
-       // color: Colors.red,
-        height:50 ,
-        child:  Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
- Text(
-            'عقارات',
-            style: TextStyle(
-              color: Colors.blueGrey,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
+      children: [
+        SizedBox(
+          height: 270,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: advertisment.length,
+            itemBuilder: (context, index) {
+              return ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: advertisment.isNotEmpty?
+                 CachedNetworkImage(
+                 
+                  imageUrl: "${advertisment[index]['image']}",
+                  fit: BoxFit.cover,
+                ):const Center(child: Text("loading"),),
+              );
+            },
           ),
-        ],),
-      ),
-    ],
+        ),
+         SizedBox(
+          // color: Colors.red,
+          height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                      localint();
+                  });
+           
+                },
+                child: const Row(
+                  children: [
+                     SizedBox(width: 10,),
+                    
+                  
+                    
+                      Text("حديث",style: TextStyle(color: Colors.blueGrey),),
+                      Icon(
+                      Icons.change_circle,
+                      color: Colors.blueGrey,
+                    ),
+                   
+                          ],
+                ),
+              ),
+              const Spacer(),
+              const SizedBox(
+                child: Center(
+                  child: Text(
+                    'عقارات',
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              const SizedBox(
+                width: 40,
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   Widget _buildCategoryRow() {
     return Container(
@@ -199,25 +250,21 @@ imageUrl: "${advertisment[index]['adv']}",
       child: Row(
         children: [
           //   _buildSearchBar(),
-              Expanded(
+          Expanded(
             child: InkWell(
               onTap: () {
-                
                 setState(() {
-               
                   bay = false;
                   egar = false;
-                  all=true;
-                    govfilter(mydata,govselect);
+                  all = true;
+                  govfilter(mydata, govselect);
                 });
               },
               child: Card(
-    color: all == true ? Colors.blueGrey: null,
+                color: all == true ? Colors.blueGrey : null,
                 child: Container(
                   alignment: Alignment.center,
-                           
                   decoration: const BoxDecoration(
-                
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
                   height: 40,
@@ -235,22 +282,19 @@ imageUrl: "${advertisment[index]['adv']}",
           Expanded(
             child: InkWell(
               onTap: () {
-                
                 setState(() {
-               
                   bay = false;
                   egar = true;
-                  all=false;
-                    govfilter(mydataagar,govselect);
+                  all = false;
+                  govfilter(mydataagar, govselect);
                 });
               },
               child: Card(
-                  color: egar == true ? Colors.blueGrey :null,
+                color: egar == true ? Colors.blueGrey : null,
                 child: Container(
                   alignment: Alignment.center,
-                             //   margin: const EdgeInsets.symmetric(horizontal: 5),
+                  //   margin: const EdgeInsets.symmetric(horizontal: 5),
                   decoration: const BoxDecoration(
-                  
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   height: 40,
@@ -268,25 +312,20 @@ imageUrl: "${advertisment[index]['adv']}",
           Expanded(
             child: InkWell(
               onTap: () {
-                print("---------------");
                 //   print()
                 setState(() {
-     
                   bay = true;
                   egar = false;
-                  all=false;
-                    govfilter(mydatabay,govselect);
-            
+                  all = false;
+                  govfilter(mydatabay, govselect);
                 });
               },
               child: Card(
-                    color: bay == true ? Colors.blueGrey[600]:null,
+                color: bay == true ? Colors.blueGrey[600] : null,
                 child: Container(
                   alignment: Alignment.center,
-                
-                  decoration:const BoxDecoration(
-                
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
                   height: 40,
                   child: Text(
@@ -306,21 +345,6 @@ imageUrl: "${advertisment[index]['adv']}",
   }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  Expanded _buildSearchBar() {
-    return Expanded(
-      flex: 2,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 255, 78, 78),
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
-        height: 40,
-        child: const Icon(Icons.search),
-      ),
-    );
-  }
 
   Widget _buildHorizontalSuggestions() {
     return Container(
@@ -330,50 +354,59 @@ imageUrl: "${advertisment[index]['adv']}",
         scrollDirection: Axis.horizontal,
         itemCount: suggestions.length,
         itemBuilder: (context, index) {
-          return _mohafadat(index);// _buildSuggestionItem(suggestions[index]);
+          return _mohafadat(index); // _buildSuggestionItem(suggestions[index]);
         },
       ),
     );
   }
-Widget _mohafadat(index ){
-return  SizedBox(height: 200,
-width: 100,
-  child: InkWell(
- onTap: (){
-  govselect=suggestions[index];
-  setState(() {
-     governorate=index;
-     if(bay){
-    govfilter(mydatabay,govselect);
-     }else if(all){
 
-govfilter(mydata,govselect);
-     }else if(egar){
+  Widget _mohafadat(index) {
+    return SizedBox(
+      height: 200,
+      width: 100,
+      child: InkWell(
+        onTap: () {
+          govselect = suggestions[index];
+          setState(() {
+            governorate = index;
+            if (bay) {
+              govfilter(mydatabay, govselect);
+            } else if (all) {
+              govfilter(mydata, govselect);
+            } else if (egar) {
+              govfilter(mydataagar, govselect);
+            }
+          });
+        },
+        child: Card(
+          color: index == governorate ? Colors.blueGrey : null,
+          child: Center(
+            child: Text(
+              suggestions[index],
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: index == governorate ? Colors.white : Colors.black),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-govfilter(mydataagar,govselect);
-     }
- 
-  });
-
- 
- },
-    child: Card(
-      color: index==governorate?Colors.blueGrey:null,
-      child: Center(child: Text("${suggestions[index]}",style:  TextStyle(fontSize: 20,fontWeight: FontWeight.bold,
-      color: index==governorate?Colors.white:Colors.black),),),),
-  ),);
-}
- 
   Widget _buildSuggestionsTitle() {
-    return  Padding(
-      padding:const EdgeInsets.symmetric(horizontal: 10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Align(
         alignment: Alignment.centerRight,
         child: Container(
-       padding:const EdgeInsets.all(10),
-          child:const Text(
+          padding: const EdgeInsets.all(10),
+          child: const Text(
             'اقتراحات قد تعجبك',
-            style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.blueGrey),
+            style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueGrey),
           ),
         ),
       ),
@@ -382,48 +415,48 @@ govfilter(mydataagar,govselect);
 
   Widget _buildGridView(localdata) {
     return InkWell(
-          child: GridView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: localdata.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: localdata.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.65,
-          ),
-          itemBuilder: (context, index) {
+        ),
+        itemBuilder: (context, index) {
           final doc = localdata[index];
 
-Timestamp timestamp = doc['time']; // جلب الـ Timestamp من Firestore
-DateTime dateTime = timestamp.toDate(); // تحويله إلى DateTime
+          Timestamp timestamp = doc['time']; // جلب الـ Timestamp من Firestore
+          DateTime dateTime = timestamp.toDate(); // تحويله إلى DateTime
 
-String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime); 
-          return _buildGridItem(doc,formattedDate);
+          String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
+          return _buildGridItem(doc, formattedDate);
         },
       ),
     );
   }
 
-  Widget _buildGridItem(doc,locformattedDate) {
+  Widget _buildGridItem(doc, locformattedDate) {
     return Card(
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Vieww(
+              builder: (context) => Vieww(
                     postlocation2: doc["postlocation2"],
                     nuberOftapk: doc["nuberOftapk"],
                     numberofroom: doc["numberofroom"],
-                    gov:doc['gov'],
+                    gov: doc['gov'],
                     mo: doc["mo"],
                     bay: doc["bay"],
-                    agric:doc["agric"],
+                    agric: doc["agric"],
                     postphone: doc["postphone"],
                     posttitle: doc["posttitle"],
                     price: doc["postprice"],
                     posturl: doc["posturl"],
                     postlocation: doc['postlocation'],
                     postsize: doc["postsize"],
-                     time: locformattedDate,
-                    )));
+                    time: locformattedDate,
+                  )));
         },
         child: Container(
           decoration: const BoxDecoration(
@@ -441,15 +474,22 @@ String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
                   //  color: Colors.amber,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    
-                    child:Hero(
-                      tag: "${doc['posturl']}",
-                      child: CachedNetworkImage(imageUrl:doc['posturl'],fit: BoxFit.cover, )),
+                    child: Hero(
+                        tag: "${doc['posturl']}",
+                        child:doc['posturl'].isNotEmpty?
+                         CachedNetworkImage(
+                          imageUrl: doc['posturl'],
+                          fit: BoxFit.cover,
+                        ):const Center(child: Text("لا توجد صورة"),)),
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              Text(doc['postprice'], style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 169, 127, 0))),
+              Text(doc['postprice'],
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 169, 127, 0))),
               Text(doc['posttitle'],
                   style: const TextStyle(fontSize: 16, color: Colors.grey)),
               Text(doc['postsize'],
@@ -457,11 +497,10 @@ String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text("${locformattedDate}"),
-                  Spacer(),
+                  Text("$locformattedDate"),
+                  const Spacer(),
                   Text(doc['postlocation']),
                   const Icon(Icons.location_on),
-
                 ],
               ),
             ],
@@ -470,10 +509,15 @@ String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
       ),
     );
   }
-
-  Widget _buildErrorWidget(Object? error) {
-    return Center(
-      child: Text('Error: $error'),
-    );
+  
+  void localint() {
+    
+ GetData();
+    getadvertiameent();
+  
+    _pageController = PageController(initialPage: _currentPage);
+    _startAutoPageChange();
   }
+
+
 }

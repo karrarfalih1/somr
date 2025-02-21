@@ -25,8 +25,7 @@ class Vieww extends StatelessWidget {
       required this.postphone,
       required this.bay,
       required this.mo,
-       required this.numberofroom,
-
+      required this.numberofroom,
       required this.price,
       required this.posturl,
       required this.postlocation,
@@ -36,20 +35,19 @@ class Vieww extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: SizedBox(
-        //  padding: const EdgeInsets.all(10),
-          //  height: 00,
-          width: 2000,
-          child: ListView(
-            children: [
+            //  padding: const EdgeInsets.all(10),
+            //  height: 00,
+              width: 2000,
+              child: ListView(
+              children: [
               SizedBox(
-                width: 2000,
-                height: 270,
-               
-                child: Hero(
-                  tag: posturl,
-                  child: ClipRRect(
-                    borderRadius:const BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight: Radius.circular(20)),
-                    child: CachedNetworkImage(imageUrl: posturl,fit: BoxFit.cover,)))
+              width: 2000,
+              height: 270,
+              child: Hero(
+              tag: posturl,
+              child: ClipRRect(
+              borderRadius:const BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight: Radius.circular(20)),
+              child:posturl.isNotEmpty?  CachedNetworkImage(imageUrl: posturl,fit: BoxFit.cover,):const Center(child:Text("لا توجد صورة"),)))
               ),
               Container( 
                 margin: const EdgeInsets.only(bottom: 6),
