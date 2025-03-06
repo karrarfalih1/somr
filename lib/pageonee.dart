@@ -6,9 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:somer/post.dart';
 import 'package:somer/viewhose.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 // افتراضًا أن هذه حزمك الخاصة
 bool bay = false;
-     bool egar = false;
+bool egar = false;
 bool all = true;
 int governorate = 0;
 
@@ -20,28 +21,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
-  
   List mydata = [];
   List data = [];
   List mydatabay = [];
 
   List mydataagar = [];
+
   List govlistgeneral = [];
+  //تخزن صور الالعلانات
   List advertisment = [];
+
   String? govselect;
   getadvertiameent() async {
     QuerySnapshot querySnapshotadv =
         await FirebaseFirestore.instance.collection("advertisement").get();
-    advertisment.addAll(querySnapshotadv.docs.map((doc) => doc.data()).toList());
+    advertisment
+        .addAll(querySnapshotadv.docs.map((doc) => doc.data()).toList());
   }
 
-  GetData() async {
-     _timer?.cancel();
+GetData() async {
+    _timer?.cancel();
     _pageController?.dispose();
     advertisment.clear();
     govlistgeneral.clear();
-mydatabay.clear();
+    mydatabay.clear();
     mydataagar.clear();
     mydata.clear();
     data.clear();
@@ -73,7 +76,7 @@ mydatabay.clear();
     "النجف",
     "كربلاء",
     "الانبار",
-    "تكريت",
+    "بابل",
     "كركوك",
     "السليمانية"
   ];
@@ -81,6 +84,7 @@ mydatabay.clear();
     data.clear();
 
     govlistgeneral.clear();
+
     if (governorate == 0) {
       data.addAll(govlist);
     } else {
@@ -88,9 +92,10 @@ mydatabay.clear();
         if (govlist[i]['gov'] == govselect) {
           govlistgeneral.add(govlist[i]);
 
-          data.addAll(govlistgeneral);
+          
         }
       }
+      data.addAll(govlistgeneral);
     }
   }
 
@@ -154,14 +159,14 @@ mydatabay.clear();
     );
   }
 
-    FloatingActionButton _buildFloatingActionButton() {
+  FloatingActionButton _buildFloatingActionButton() {
     return FloatingActionButton(
-        backgroundColor: Colors.blueGrey,
-        onPressed: () {
+      backgroundColor: Colors.blueGrey,
+      onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => Post(
+            builder: (context) => Post(
                   catogreyid: FirebaseAuth.instance.currentUser!.uid,
-   )));
+                )));
       },
       child: const Icon(
         Icons.post_add,
@@ -180,18 +185,20 @@ mydatabay.clear();
             itemCount: advertisment.length,
             itemBuilder: (context, index) {
               return ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                child: advertisment.isNotEmpty?
-                 CachedNetworkImage(
-                 
-                  imageUrl: "${advertisment[index]['image']}",
-                  fit: BoxFit.cover,
-                ):const Center(child: Text("loading"),),
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                child: advertisment.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: "${advertisment[index]['image']}",
+                        fit: BoxFit.cover,
+                      )
+                    : const Center(
+                        child: Text("loading"),
+                      ),
               );
             },
           ),
         ),
-         SizedBox(
+        SizedBox(
           // color: Colors.red,
           height: 50,
           child: Row(
@@ -200,31 +207,30 @@ mydatabay.clear();
               InkWell(
                 onTap: () {
                   setState(() {
-                      localint();
-                  });
-           
-                },
+                    localint();
+                });          },
                 child: const Row(
                   children: [
-                     SizedBox(width: 10,),
-                    
-                  
-                    
-                      Text("حديث",style: TextStyle(color: Colors.blueGrey),),
-                      Icon(
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "حديث",
+                      style: TextStyle(color: Colors.blueGrey),
+                    ),
+                    Icon(
                       Icons.change_circle,
                       color: Colors.blueGrey,
                     ),
-                   
-                          ],
+                  ],
                 ),
               ),
-              const Spacer(),
-              const SizedBox(
-                child: Center(
-                  child: Text(
+                 const Spacer(),
+                 const SizedBox(
+                 child: Center(
+                 child: Text(
                     'عقارات',
-                    style: TextStyle(
+                      style: TextStyle(
                       color: Colors.blueGrey,
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -476,11 +482,14 @@ mydatabay.clear();
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                     child: Hero(
                         tag: "${doc['posturl']}",
-                        child:doc['posturl'].isNotEmpty?
-                         CachedNetworkImage(
-                          imageUrl: doc['posturl'],
-                          fit: BoxFit.cover,
-                        ):const Center(child: Text("لا توجد صورة"),)),
+                        child: doc['posturl'].isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: doc['posturl'],
+                                fit: BoxFit.cover,
+                              )
+                            : const Center(
+                                child: Text("لا توجد صورة"),
+                              )),
                   ),
                 ),
               ),
@@ -509,15 +518,12 @@ mydatabay.clear();
       ),
     );
   }
-  
+
   void localint() {
-    
- GetData();
+    GetData();
     getadvertiameent();
-  
+
     _pageController = PageController(initialPage: _currentPage);
     _startAutoPageChange();
   }
-
-
 }

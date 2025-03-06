@@ -30,6 +30,7 @@ class _Mystate extends State<Post> {
 bool agric=true;
   bool bay = false;
   List<String> suggestions = [
+  "الكل",
     "بغداد",
     "ذي قار",
     "بصرة",
@@ -39,7 +40,7 @@ bool agric=true;
     "النجف",
     "كربلاء",
     "الانبار",
-    "تكريت",
+    "بابل",
     "كركوك",
     "السليمانية"
   ];
@@ -443,11 +444,21 @@ bool agric=true;
                 ),
                 botomc(
                   onpressed: () {
-                    if(url !=null){   if (_formKey.currentState!.validate()) {
+
+                    if(url !=null){ 
+
+                
+                      
+                        if (_formKey.currentState!.validate()) {
+
                       addPost();
+
                       //    Navigator.of(context).pushNamed("pageone");
-                      Navigator.of(context).pop();
+                     
+
+           
                     }}else{
+
                     showDialog(context: context, builder: (context){
                       return const AlertDialog(
                         title: Text("تنبيه"),
