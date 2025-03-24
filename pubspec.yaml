@@ -72,6 +72,8 @@ flutter:
   assets:
     - images/home-button.png
     - images/home2.jpg
+    - images/iconfandi.jpg
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

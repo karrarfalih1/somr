@@ -452,8 +452,16 @@ bool agric=true;
                         if (_formKey.currentState!.validate()) {
 
                       addPost();
-
-                      //    Navigator.of(context).pushNamed("pageone");
+                      ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content:const Text('تمت العملية بنجاح ✅'),
+                duration:const Duration(seconds: 2), // المدة الزمنية
+                behavior: SnackBarBehavior.floating, // جعل الشريط عائمًا
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // جعل الحواف دائرية
+                ),
+              ), );
+                          Navigator.pop(context,"تم نشر المنشور");
                      
 
            
@@ -466,7 +474,7 @@ bool agric=true;
                       );
                     });
                     }
-                 
+
                   },
                   textbotum: 'نشر',
                 )

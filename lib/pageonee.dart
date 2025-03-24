@@ -78,7 +78,7 @@ GetData() async {
     "الانبار",
     "بابل",
     "كركوك",
-    "السليمانية"
+    "السليمانية" 
   ];
   govfilter(List govlist, govselect) {
     data.clear();
@@ -95,8 +95,9 @@ GetData() async {
           
         }
       }
-      data.addAll(govlistgeneral);
+      
     }
+    data.addAll(govlistgeneral);
   }
 
   Timer? _timer;
@@ -215,7 +216,7 @@ GetData() async {
                       width: 10,
                     ),
                     Text(
-                      "حديث",
+                      "تحديث",
                       style: TextStyle(color: Colors.blueGrey),
                     ),
                     Icon(
@@ -229,7 +230,7 @@ GetData() async {
                  const SizedBox(
                  child: Center(
                  child: Text(
-                    'عقارات',
+                    "FANDI",
                       style: TextStyle(
                       color: Colors.blueGrey,
                       fontSize: 30,
@@ -499,7 +500,7 @@ GetData() async {
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 169, 127, 0))),
-              Text(doc['posttitle'],
+              Text(doc['bay']== false? "للبيع":"للايجار",
                   style: const TextStyle(fontSize: 16, color: Colors.grey)),
               Text(doc['postsize'],
                   style: const TextStyle(fontSize: 16, color: Colors.grey)),

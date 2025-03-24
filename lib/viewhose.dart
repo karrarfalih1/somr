@@ -194,7 +194,7 @@ class Vieww extends StatelessWidget {
                   ],
                 ),
                 trailing: const Icon(
-                  Icons.chair,
+                  Icons.list,
                   size: 18,
                 ),
               ),
@@ -242,6 +242,28 @@ class Vieww extends StatelessWidget {
                 ),
                 trailing: const Icon(
                   Icons.phone,
+                  size: 18,
+                ),
+              ),  ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(" $gov"
+                     ,
+                      textDirection: TextDirection.rtl,
+                      style:
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      "المحافضة:",
+                      textDirection: TextDirection.rtl,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                trailing: const Icon(
+                  Icons.location_city_outlined,
                   size: 18,
                 ),
               ),
